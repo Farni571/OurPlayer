@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">OurPlayer</string>
+    <string name="youtube_restricted_mode_enabled">youtube_restricted_mode_enabled</string>
+
 </resources>

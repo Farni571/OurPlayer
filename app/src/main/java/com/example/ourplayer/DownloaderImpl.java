@@ -12,10 +12,14 @@ import org.schabi.newpipe.extractor.downloader.Response;
 import org.schabi.newpipe.extractor.exceptions.ReCaptchaException;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
@@ -59,7 +63,14 @@ public final class DownloaderImpl extends Downloader {
     }
 
     public String getCookies(final String url) {
-        return "";
+        final String youtubeCookie = url.contains(YOUTUBE_DOMAIN)
+                ? getCookie(YOUTUBE_RESTRICTED_MODE_COOKIE_KEY) : null;
+
+        return Stream.of(youtubeCookie, getCookie("recaptcha_cookies"))
+                .filter(Objects::nonNull)
+                .flatMap(cookies -> Arrays.stream(cookies.split("; *")))
+                .distinct()
+                .collect(Collectors.joining("; "));
     }
 
     public String getCookie(final String key) {
@@ -75,7 +86,8 @@ public final class DownloaderImpl extends Downloader {
     }
 
     public void updateYoutubeRestrictedModeCookies(final Context context) {
-        final String restrictedModeEnabledKey = "";
+        final String restrictedModeEnabledKey =
+                context.getString(R.string.youtube_restricted_mode_enabled);
         final boolean restrictedModeEnabled = PreferenceManager.getDefaultSharedPreferences(context)
                 .getBoolean(restrictedModeEnabledKey, false);
         updateYoutubeRestrictedModeCookies(restrictedModeEnabled);
@@ -88,7 +100,7 @@ public final class DownloaderImpl extends Downloader {
         } else {
             removeCookie(YOUTUBE_RESTRICTED_MODE_COOKIE_KEY);
         }
-      //  InfoCache.getInstance().clearCache();
+        InfoCache.getInstance().clearCache();
     }
 
     /**

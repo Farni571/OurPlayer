@@ -18,8 +18,11 @@ class MediaExtractor {
         val kioskId = "Trending"
         val youTubeService = ServiceList.YouTube
 
-        val kioskExtractor = youTubeService.getKioskList().getExtractorById("Trending", null)
-        val page = kioskExtractor.fetchPage()
-            //  kioskExtractor.fetchPage()
+        val kioskExtractor1 = youTubeService.kioskList.getExtractorById("Trending", null)
+
+        val kioskExtractor = youTubeService.kioskList.getExtractorById("Trending", null)
+
+
+
     }
 }

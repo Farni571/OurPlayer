@@ -15,22 +15,23 @@ import com.example.ourplayer.ui.theme.OurPlayerTheme
 import com.facebook.flipper.BuildConfig
 import com.facebook.flipper.android.AndroidFlipperClient
 import com.facebook.flipper.android.utils.FlipperUtils
-import com.facebook.flipper.plugins.inspector.DescriptorMapping
-import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin
+import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
 import com.facebook.soloader.SoLoader
 import kotlinx.coroutines.launch
 import org.schabi.newpipe.extractor.NewPipe
-import org.schabi.newpipe.extractor.downloader.Downloader
 
 class MainActivity : ComponentActivity() {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         SoLoader.init(this, false)
 
-        if (BuildConfig.DEBUG && FlipperUtils.shouldEnableFlipper(this)) {
+        if (FlipperUtils.shouldEnableFlipper(this)) {
             val client = AndroidFlipperClient.getInstance(this)
-            client.addPlugin(InspectorFlipperPlugin(this, DescriptorMapping.withDefaults()))
+
+            client.addPlugin(NetworkFlipperPlugin())
             client.start()
         }
 
@@ -51,6 +52,10 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             MediaExtractor().extractService()
         }
+    }
+
+    companion object {
+        const val DEBUG = !BuildConfig.BUILD_TYPE.equals("release")
     }
 }
 
