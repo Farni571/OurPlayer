@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        SoLoader.init(this, false)7,m l
+        SoLoader.init(this, false)
 
         if (FlipperUtils.shouldEnableFlipper(this)) {
             val client = AndroidFlipperClient.getInstance(this)
