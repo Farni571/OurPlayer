@@ -12,26 +12,39 @@ import org.schabi.newpipe.extractor.services.youtube.linkHandler.YoutubeStreamLi
 import org.schabi.newpipe.extractor.stream.StreamExtractor
 import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.downloader.Downloader
+import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
 class MediaExtractor {
 
 
-    suspend fun extractService() = withContext(Dispatchers.IO) {
-        val page: ListExtractor.InfoItemsPage<InfoItem>
-        val kioskId = "Trending"
-        val youTubeService = ServiceList.YouTube
+    suspend fun searchYouTubeVideos(query: String) = withContext(Dispatchers.IO) {
+        try {
+            // Получаем экземпляр сервиса YouTube
+            val youTubeService = ServiceList.YouTube
 
-        val kioskExtractor1 = youTubeService.kioskList.getExtractorById("Trending", null)
+            // Создаем экстрактор для поиска
+            val searchExtractor = youTubeService.getSearchExtractor(query)
 
-        val kioskExtractor = youTubeService.kioskList.getExtractorById("Trending", null)
+            // Выполняем запрос
+            searchExtractor.fetchPage()
 
-        val searchExtractor = youTubeService.getSearchExtractor("mae")
-        searchExtractor.apply {
-            fetchPage()
-            page = initialPage
+            // Получаем начальную страницу с результатами поиска
+            val searchResults = searchExtractor.initialPage.items
+
+            // Обработка результатов поиска
+            if (searchResults.isNotEmpty()) {
+                searchResults.forEach { video ->
+                    if (video is StreamInfoItem) {
+                        // Вывод информации о каждом видео
+                        println("Video title: ${video.name}, URL: ${video.url}")
+                    }
+                }
+            } else {
+                println("No videos found for query: $query")
+            }
+        } catch (e: Exception) {
+            // Обработка исключений (например, логирование ошибки)
+            e.printStackTrace()
         }
-
-        val x = page.items.get(0)
-
     }
 }
