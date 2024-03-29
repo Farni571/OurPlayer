@@ -67,7 +67,7 @@ dependencies {
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
 
-    implementation 'com.github.TeamNewPipe:NewPipeExtractor:v0.21.3'
+    implementation 'com.github.TeamNewPipe:NewPipeExtractor:v0.23.1'
     implementation 'com.squareup.okhttp3:okhttp:4.9.3'
     debugImplementation 'com.facebook.flipper:flipper-network-plugin:0.190.0'
     debugImplementation 'com.facebook.flipper:flipper:0.190.0'

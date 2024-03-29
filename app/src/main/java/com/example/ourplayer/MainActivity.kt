@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
         NewPipe.init(DownloaderImpl.init(null))
 
         lifecycleScope.launch {
-            MediaExtractor().extractService()
+            MediaExtractor().searchYouTubeVideos("vfr")
         }
     }
 
