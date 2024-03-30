@@ -17,19 +17,10 @@ class ViewModel: ViewModel() {
     suspend fun searchYouTubeVideos(query: String) = withContext(Dispatchers.IO) {
 
         try {
-            // Получаем экземпляр сервиса YouTube
             val youTubeService = ServiceList.YouTube
-
-            // Создаем экстрактор для поиска
             val searchExtractor = youTubeService.getSearchExtractor(query)
-
-            // Выполняем запрос
             searchExtractor.fetchPage()
-
-            // Получаем начальную страницу с результатами поиска
             val searchResults = searchExtractor.initialPage.items
-
-            // Обработка результатов поиска
             if (searchResults.isNotEmpty()) {
                 searchResults.forEach { video ->
                     if (video is StreamInfoItem) {
@@ -45,10 +36,8 @@ class ViewModel: ViewModel() {
             } else {
                 println("No videos found for query: $query")
             }
-
-            videosLiveData.value = resultList
+            videosLiveData.postValue(resultList)
         } catch (e: Exception) {
-            // Обработка исключений (например, логирование ошибки)
             e.printStackTrace()
         }
     }

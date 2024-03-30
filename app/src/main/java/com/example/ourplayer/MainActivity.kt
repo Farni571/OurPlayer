@@ -16,15 +16,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import coil.compose.rememberImagePainter
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.example.ourplayer.data.VideoItem
+import com.example.ourplayer.presentation.InitialVideosList
+import com.example.ourplayer.presentation.VideosScreen
 import com.example.ourplayer.presentation.ViewModel
 import com.example.ourplayer.ui.theme.OurPlayerTheme
 import com.facebook.flipper.BuildConfig
@@ -56,7 +61,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-
+                    VideosScreen(viewModel)
                 }
             }
         }
@@ -64,38 +69,7 @@ class MainActivity : ComponentActivity() {
         NewPipe.init(DownloaderImpl.init(null))
 
         lifecycleScope.launch {
-
             viewModel.searchYouTubeVideos("vfr")
-
-        }
-
-
-
-    }
-
-    @Composable
-    fun VideosList(videos: List<VideoItem>) {
-        LazyColumn {
-            items(videos) { video ->
-                VideoItemView(video)
-            }
-        }
-    }
-
-    @Composable
-    fun VideoItemView(video: VideoItem) {
-        Column(modifier = Modifier.padding(8.dp)) {
-            Text(text = video.title, style = MaterialTheme.typography.displayMedium)
-            // Отображение миниатюры, если вы хотите добавить Image
-            // Помните, что для загрузки изображений в Compose вам потребуется использовать библиотеку, например Coil
-            Image(
-                painter = rememberImagePainter(video.thumbnailUrl),
-                contentDescription = null,
-                modifier = Modifier
-                    .height(200.dp)
-                    .fillMaxWidth()
-                    .clip(shape = RoundedCornerShape(8.dp))
-            )
         }
     }
 
@@ -104,42 +78,15 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun VideosScreen(viewModel: ViewModel = ViewModel()) {
-    viewModel.videosLiveData.ob
-    val videos by viewModel.videosLiveData.observe(emptyList())
-    VideosList(videos)
-}
 
-@Composable
-fun VideosList(videos: List<VideoItem>) {
-    LazyColumn {
-        items(videos) { video ->
-            VideoItemView(video)
-        }
-    }
-}
 
-@Composable
-fun VideoItemView(video: VideoItem) {
-    Column(modifier = Modifier.padding(8.dp)) {
-        Text(text = video.title, style = MaterialTheme.typography.displayMedium)
-        Image(
-            painter = rememberImagePainter(video.thumbnailUrl),
-            contentDescription = null,
-            modifier = Modifier
-                .height(200.dp)
-                .fillMaxWidth()
-                .clip(shape = RoundedCornerShape(8.dp))
-        )
-    }
-}
+
 
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     OurPlayerTheme {
-        Greeting("Android")
+
     }
 }
